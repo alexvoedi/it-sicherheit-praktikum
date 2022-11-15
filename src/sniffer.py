@@ -46,13 +46,13 @@ def write_csv(fname, cptr):
         for packet, packet_no in zip(cptr, range(1, len(cptr) + 1)):
             pckt_no_layers = len(packet.layers())  # Number of layers
             pckt_unix_ts_micro = int(packet.time * 1000000)  # Unix TS in microseconds
-            pckt_mac_src = packet.src  # Source mac address
-            pckt_mac_dst = packet.dst  # Destination mac address
+            pckt_mac_src = packet.src if hasattr(packet, "src") else "NULL"  # Source mac address
+            pckt_mac_dst = packet.dst if hasattr(packet, "dst") else "NULL"  # Destination mac address
             pckt_ip_src = packet["IP"].src if hasattr(packet, "IP") else "NULL"  # Source ip address
             pckt_ip_dst = packet["IP"].dst if hasattr(packet, "IP") else "NULL"  # Destination ip address
             pckt_port_src = packet.sport if hasattr(packet, "sport") else "NULL"  # Source port
             pckt_port_dst = packet.dport if hasattr(packet, "dport") else "NULL"  # Destination port
-            pckt_ether_type = hex(packet.type)  # EtherType
+            pckt_ether_type = hex(packet.type) if hasattr(packet, "type") else "NULL"  # EtherType
             pckt_payload_length = len(packet.load)  # Payload packet length
             pckt_total_length = len(packet)  # Total packet length
 
