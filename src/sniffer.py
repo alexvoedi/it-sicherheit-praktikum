@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 
 from scapy.config import conf
 from scapy.sendrecv import sniff
@@ -77,7 +78,7 @@ def main():
                     iface="ap0",
                     filter=get_bpf_filter(),
                     monitor=True,
-                    count=50)
+                    count=sys.argv[1])
     # Write captured packets
     write_pcap("capture.pcap", capture)
     # Write traffic classification mapping
