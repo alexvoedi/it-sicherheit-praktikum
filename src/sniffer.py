@@ -78,7 +78,7 @@ def main():
                     iface="ap0",
                     filter=get_bpf_filter(),
                     monitor=True,
-                    count=sys.argv[1])
+                    count=int(sys.argv[1]))
     # Write captured packets
     write_pcap("capture.pcap", capture)
     # Write traffic classification mapping
