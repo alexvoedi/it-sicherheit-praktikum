@@ -34,12 +34,34 @@ def write_pcap(fname, cptr):
     os.chown(fname, 1000, 1000)
 
 
-# Currently a dummy function to generate the (hopefully) correct .csv schema
 def write_csv(fname, cptr):
     with open(fname, "w") as f:
-        f.write("packet_number,traffic_class\n")
-        for _, packet_num in zip(cptr, range(1, len(cptr) + 1)):
-            f.write(f"{packet_num},0\n")
+        # Header
+        f.write(
+            "no,no_layers,unix_ts_micro,mac_src,mac_dst,ip_src,"
+            "ip_dst,port_src,port_dst,ether_type,payload_length,total_length\n"
+        )
+
+        for packet, packet_no in zip(cptr, range(1, len(cptr) + 1)):
+            pckt_no_layers = len(packet.layers())  # Number of layers
+            pckt_unix_ts_micro = int(packet.time * 1000000)  # Unix TS in microseconds
+            pckt_mac_src = packet.src  # Source mac address
+            pckt_mac_dst = packet.dst  # Destination mac address
+            pckt_ip_src = packet["IP"].src if hasattr(packet, "IP") else "NULL"  # Source ip address
+            pckt_ip_dst = packet["IP"].dst if hasattr(packet, "IP") else "NULL"  # Destination ip address
+            pckt_port_src = packet.sport if hasattr(packet, "sport") else "NULL"  # Source port
+            pckt_port_dst = packet.dport if hasattr(packet, "dport") else "NULL"  # Destination port
+            pckt_ether_type = hex(packet.type)  # EtherType
+            pckt_payload_length = len(packet.load)  # Payload packet length
+            pckt_total_length = len(packet)  # Total packet length
+
+            # Write row
+            f.write(
+                f"{packet_no},{pckt_no_layers},{pckt_unix_ts_micro},{pckt_mac_src},"
+                f"{pckt_mac_dst},{pckt_ip_src},{pckt_ip_dst},{pckt_port_src},"
+                f"{pckt_port_dst},{pckt_ether_type},{pckt_payload_length},{pckt_total_length}\n"
+            )
+
     os.chown(fname, 1000, 1000)
 
 
