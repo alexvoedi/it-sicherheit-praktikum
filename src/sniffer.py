@@ -37,28 +37,51 @@ def write_csv(fname, cptr):
     with open(fname, "w") as f:
         # Header
         f.write(
-            "no,no_layers,unix_ts_micro,mac_src,mac_dst,ip_src,"
-            "ip_dst,port_src,port_dst,ether_type,payload_length,total_length\n"
+            "no,"
+            "unix_ts_micro,"
+            "no_layers,"
+            "total_length,"
+            "mac_src,"
+            "mac_dst,"
+            "ether_type,"
+            "ip_src,"
+            "ip_dst,"
+            "port_src,"
+            "port_dst,"
+            "payload_length\n"
         )
 
         for packet, packet_no in zip(cptr, range(1, len(cptr) + 1)):
-            pckt_no_layers = len(packet.layers())  # Number of layers
             pckt_unix_ts_micro = int(packet.time * 1000000)  # Unix TS in microseconds
+            pckt_no_layers = len(packet.layers())  # Number of layers
+            pckt_total_length = len(packet)  # Total packet length
+            # Ethernet
             pckt_mac_src = packet.src if hasattr(packet, "src") else "NULL"  # Source mac address
             pckt_mac_dst = packet.dst if hasattr(packet, "dst") else "NULL"  # Destination mac address
+            pckt_ether_type = hex(packet.type) if hasattr(packet, "type") else "NULL"  # EtherType
+            # IP
             pckt_ip_src = packet["IP"].src if hasattr(packet, "IP") else "NULL"  # Source ip address
             pckt_ip_dst = packet["IP"].dst if hasattr(packet, "IP") else "NULL"  # Destination ip address
+            # Transport
             pckt_port_src = packet.sport if hasattr(packet, "sport") else "NULL"  # Source port
             pckt_port_dst = packet.dport if hasattr(packet, "dport") else "NULL"  # Destination port
-            pckt_ether_type = hex(packet.type) if hasattr(packet, "type") else "NULL"  # EtherType
+            # Other
             pckt_payload_length = len(packet.load) if hasattr(packet, "load") else "NULL"  # Payload packet length
-            pckt_total_length = len(packet)  # Total packet length
 
             # Write row
             f.write(
-                f"{packet_no},{pckt_no_layers},{pckt_unix_ts_micro},{pckt_mac_src},"
-                f"{pckt_mac_dst},{pckt_ip_src},{pckt_ip_dst},{pckt_port_src},"
-                f"{pckt_port_dst},{pckt_ether_type},{pckt_payload_length},{pckt_total_length}\n"
+                f"{packet_no},"
+                f"{pckt_unix_ts_micro},"
+                f"{pckt_no_layers},"
+                f"{pckt_total_length},"
+                f"{pckt_mac_src},"
+                f"{pckt_mac_dst},"
+                f"{pckt_ether_type},"
+                f"{pckt_ip_src},"
+                f"{pckt_ip_dst},"
+                f"{pckt_port_src},"
+                f"{pckt_port_dst},"
+                f"{pckt_payload_length}\n"
             )
 
     os.chown(fname, 1000, 1000)
