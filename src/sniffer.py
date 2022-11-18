@@ -60,8 +60,8 @@ def write_csv(fname, cptr):
             pckt_mac_dst = packet.dst if hasattr(packet, "dst") else "NULL"  # Destination mac address
             pckt_ether_type = hex(packet.type) if hasattr(packet, "type") else "NULL"  # EtherType
             # IP
-            pckt_ip_src = packet["IP"].src if hasattr(packet, "IP") else "NULL"  # Source ip address
-            pckt_ip_dst = packet["IP"].dst if hasattr(packet, "IP") else "NULL"  # Destination ip address
+            pckt_ip_src = packet["IP"].src if "IP" in packet else "NULL"  # Source ip address
+            pckt_ip_dst = packet["IP"].dst if "IP" in packet else "NULL"  # Destination ip address
             # Transport
             pckt_port_src = packet.sport if hasattr(packet, "sport") else "NULL"  # Source port
             pckt_port_dst = packet.dport if hasattr(packet, "dport") else "NULL"  # Destination port
