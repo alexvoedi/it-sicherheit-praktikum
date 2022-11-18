@@ -3,9 +3,7 @@
 import os
 import sys
 
-from scapy.config import conf
-from scapy.sendrecv import sniff
-from scapy.utils import PcapWriter
+from scapy.all import conf, sniff, PcapWriter
 
 
 packet_counter = 0
