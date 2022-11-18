@@ -46,6 +46,7 @@ def write_csv(fname, cptr):
             "ether_type,"
             "ip_src,"
             "ip_dst,"
+            "ip_proto,"
             "port_src,"
             "port_dst,"
             "payload_length\n"
@@ -62,6 +63,7 @@ def write_csv(fname, cptr):
             # IP
             pckt_ip_src = packet["IP"].src if "IP" in packet else "NULL"  # Source ip address
             pckt_ip_dst = packet["IP"].dst if "IP" in packet else "NULL"  # Destination ip address
+            pckt_ip_proto = packet["IP"].proto if "IP" in packet else "NULL"  # IP protocol field
             # Transport
             pckt_port_src = packet.sport if hasattr(packet, "sport") else "NULL"  # Source port
             pckt_port_dst = packet.dport if hasattr(packet, "dport") else "NULL"  # Destination port
@@ -79,6 +81,7 @@ def write_csv(fname, cptr):
                 f"{pckt_ether_type},"
                 f"{pckt_ip_src},"
                 f"{pckt_ip_dst},"
+                f"{pckt_ip_proto},"
                 f"{pckt_port_src},"
                 f"{pckt_port_dst},"
                 f"{pckt_payload_length}\n"
