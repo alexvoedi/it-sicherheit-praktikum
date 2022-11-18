@@ -51,7 +51,7 @@ def write_csv(fname, cptr):
             pckt_port_src = packet.sport if hasattr(packet, "sport") else "NULL"  # Source port
             pckt_port_dst = packet.dport if hasattr(packet, "dport") else "NULL"  # Destination port
             pckt_ether_type = hex(packet.type) if hasattr(packet, "type") else "NULL"  # EtherType
-            pckt_payload_length = len(packet.load)  # Payload packet length
+            pckt_payload_length = len(packet.load) if hasattr(packet, "load") else "NULL"  # Payload packet length
             pckt_total_length = len(packet)  # Total packet length
 
             # Write row
