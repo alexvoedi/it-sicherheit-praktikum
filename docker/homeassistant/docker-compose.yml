@@ -1,0 +1,46 @@
+version: ‘3’
+services:
+
+  homeassistant:
+    container_name: homeassistant
+    privileged: true
+    restart: unless-stopped
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - "./homeassistant:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - "8123:8123"
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyACM0:/dev/ttyACM0
+     networks:
+       - zwave
+
+   zwave-js-ui:
+     container_name: zwave-js-ui
+     image: zwavejs/zwave-js-ui:latest
+     restart: always
+     tty: true
+     stop_signal: SIGINT
+     environment:
+       - SESSION_SECRET=mysupersecretkey
+       - ZWAVEJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
+       #- TZ=America/New_York
+     networks:
+       - zwave
+     devices:
+       - /dev/ttyACM0:/dev/ttyACM0
+     volumes:
+       - "./zwave-config:/usr/src/app/store"
+     ports:
+       - '8091:8091' # port for web interface
+       - '3000:3000' # port for Z-Wave JS websocket server
+     networks:
+       - zwave
+
+ networks:
+   zwave:
+ volumes:
+   zwave-config:
+     name: zwave-config
